@@ -231,57 +231,6 @@ class FollowUserPage extends GetView<FollowUserController> {
                 () => _buildActiveFilterBar(context),
               ),
               Padding(
-                padding: AppStyle.edgeInsetsH8.copyWith(top: 4),
-                child: Text(
-                  "标签",
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-              ),
-              Padding(
-                padding: AppStyle.edgeInsetsA8.copyWith(top: 4),
-                child: Obx(
-                  () => SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Wrap(
-                      spacing: 12,
-                      children: controller.filterTagOptions.map((tag) {
-                        return FilterButton(
-                          text: tag.tag,
-                          selected: controller.selectedTagId.value == tag.id,
-                          onTap: () => controller.setSelectedTag(tag),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: AppStyle.edgeInsetsH8,
-                child: Obx(
-                  () => Row(
-                    children: [
-                      ChoiceChip(
-                        label: const Text("按状态"),
-                        selected: controller.groupMode.value ==
-                            FollowGroupMode.liveStatus,
-                        onSelected: (_) {
-                          controller.setGroupMode(FollowGroupMode.liveStatus);
-                        },
-                      ),
-                      AppStyle.hGap8,
-                      ChoiceChip(
-                        label: const Text("按平台"),
-                        selected: controller.groupMode.value ==
-                            FollowGroupMode.platform,
-                        onSelected: (_) {
-                          controller.setGroupMode(FollowGroupMode.platform);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
                 padding: AppStyle.edgeInsetsA8.copyWith(top: 4),
                 child: Obx(
                   () => SingleChildScrollView(
