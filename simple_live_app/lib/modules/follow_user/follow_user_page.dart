@@ -423,9 +423,12 @@ class FollowUserPage extends GetView<FollowUserController> {
         mainAxisSpacing: 12,
       );
     }
+    // 与官方版一致：列数 = 宽度 // 500（1080 宽 => 2 列）
+    var officialCount = width ~/ 500;
+    if (officialCount < 1) officialCount = 1;
     return _FollowLayoutSpec(
       itemStyle: FollowUserItemStyle.defaultList,
-      crossAxisCount: mobile ? 1 : (width >= 1520 ? 2 : 1),
+      crossAxisCount: mobile ? 1 : officialCount,
       mainAxisExtent: showLiveCover ? (mobile ? 132 : 138) : (mobile ? 82 : 92),
       childAspectRatio: 3.2,
       crossAxisSpacing: 12,
