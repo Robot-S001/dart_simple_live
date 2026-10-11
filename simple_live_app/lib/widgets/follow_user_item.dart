@@ -215,107 +215,96 @@ class FollowUserItem extends StatelessWidget {
 
   Widget _buildAvatarListCard(BuildContext context, {required bool compact}) {
     final theme = Theme.of(context);
-    // 对齐官方版外观：48px 圆形头像、无卡片背景/边框、常规字重、ListTile 风格内边距
-    const avatarSize = 48.0;
-    final titleStyle = theme.textTheme.bodyLarge;
-    final subtitleStyle = theme.textTheme.bodySmall?.copyWith(
-      color: Colors.grey.shade600,
-      fontSize: 12,
-    );
-    return InkWell(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 16,
-          right: 4,
-          top: compact ? 6 : 8,
-          bottom: compact ? 6 : 8,
-        ),
-        child: Row(
+    // 完全对齐官方 1.8.6：ListTile + 48px 圆形头像，副标题只显示平台名（不显示开播时长）
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 16, right: 4),
+      leading: NetImage(
+        item.face,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+      ),
+      title: Text.rich(
+        TextSpan(
+          text: item.userName,
           children: [
-            NetImage(
-              item.face,
-              width: avatarSize,
-              height: avatarSize,
-              borderRadius: avatarSize / 2,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
+            WidgetSpan(
+              alignment: ui.PlaceholderAlignment.middle,
+              child: Obx(
+                () => Offstage(
+                  offstage: item.liveStatus.value == 0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Flexible(
-                        child: Text(
-                          item.userName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: titleStyle,
+                      const SizedBox(width: 12),
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: item.liveStatus.value == 2
+                              ? Colors.green
+                              : Colors.grey,
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      _buildStatusDot(),
                       const SizedBox(width: 4),
                       Text(
                         getStatus(item.liveStatus.value),
-                        style: subtitleStyle,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color:
+                              item.liveStatus.value == 2 ? null : Colors.grey,
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: compact ? 4 : 6),
-                  Row(
-                    children: [
-                      Image.asset(
-                        _site.logo,
-                        width: 20,
-                      ),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          _site.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: subtitleStyle,
-                        ),
-                      ),
-                      if (_liveDurationText().isNotEmpty) ...[
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Text(
-                            _liveDurationText(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: subtitleStyle,
-                          ),
-                        ),
-                      ],
-                      if (playing) ...[
-                        const SizedBox(width: 8),
-                        Text(
-                          "正在观看",
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-            SizedBox(width: compact ? 6 : 10),
-            _buildActionArea(
-              context,
-              compact: compact,
-              vertical: false,
             ),
           ],
         ),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
       ),
+      subtitle: Row(
+        children: [
+          Image.asset(
+            _site.logo,
+            width: 20,
+          ),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              _site.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          if (playing) ...[
+            const SizedBox(width: 8),
+            Text(
+              "正在观看",
+              style: TextStyle(
+                fontSize: 12,
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ],
+      ),
+      trailing: _buildActionArea(
+        context,
+        compact: true,
+        vertical: false,
+      ),
+      onTap: onTap,
+      onLongPress: onLongPress,
     );
   }
 
