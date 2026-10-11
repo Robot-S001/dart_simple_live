@@ -215,115 +215,105 @@ class FollowUserItem extends StatelessWidget {
 
   Widget _buildAvatarListCard(BuildContext context, {required bool compact}) {
     final theme = Theme.of(context);
-    final avatarSize = compact ? 48.0 : 58.0;
-    final radius = BorderRadius.circular(compact ? 12 : 14);
-    final titleStyle = compact
-        ? theme.textTheme.titleSmall
-        : theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600);
+    // 对齐官方版外观：48px 圆形头像、无卡片背景/边框、常规字重、ListTile 风格内边距
+    const avatarSize = 48.0;
+    final titleStyle = theme.textTheme.bodyLarge;
     final subtitleStyle = theme.textTheme.bodySmall?.copyWith(
       color: Colors.grey.shade600,
+      fontSize: 12,
     );
-    return Material(
-      color: theme.cardColor,
-      borderRadius: radius,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        borderRadius: radius,
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Container(
-          decoration: BoxDecoration(
-            border: _stateBorder(theme, idleAlpha: 16, idleWidth: 0.6),
-            borderRadius: radius,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: compact ? 10 : 12,
-            vertical: compact ? 8 : 10,
-          ),
-          child: Row(
-            children: [
-              NetImage(
-                item.face,
-                width: avatarSize,
-                height: avatarSize,
-                borderRadius: avatarSize / 2,
-              ),
-              SizedBox(width: compact ? 10 : 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            item.userName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: titleStyle,
-                          ),
+    return InkWell(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 4,
+          top: compact ? 6 : 8,
+          bottom: compact ? 6 : 8,
+        ),
+        child: Row(
+          children: [
+            NetImage(
+              item.face,
+              width: avatarSize,
+              height: avatarSize,
+              borderRadius: avatarSize / 2,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          item.userName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: titleStyle,
                         ),
-                        const SizedBox(width: 8),
-                        _buildStatusDot(),
-                        const SizedBox(width: 4),
-                        Text(
-                          getStatus(item.liveStatus.value),
+                      ),
+                      const SizedBox(width: 8),
+                      _buildStatusDot(),
+                      const SizedBox(width: 4),
+                      Text(
+                        getStatus(item.liveStatus.value),
+                        style: subtitleStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: compact ? 4 : 6),
+                  Row(
+                    children: [
+                      Image.asset(
+                        _site.logo,
+                        width: 20,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          _site.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: subtitleStyle,
                         ),
-                      ],
-                    ),
-                    SizedBox(height: compact ? 4 : 6),
-                    Row(
-                      children: [
-                        Image.asset(
-                          _site.logo,
-                          width: compact ? 16 : 18,
-                          height: compact ? 16 : 18,
-                        ),
-                        const SizedBox(width: 6),
+                      ),
+                      if (_liveDurationText().isNotEmpty) ...[
+                        const SizedBox(width: 8),
                         Flexible(
                           child: Text(
-                            _site.name,
+                            _liveDurationText(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: subtitleStyle,
                           ),
                         ),
-                        if (_liveDurationText().isNotEmpty) ...[
-                          const SizedBox(width: 8),
-                          Flexible(
-                            child: Text(
-                              _liveDurationText(),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: subtitleStyle,
-                            ),
-                          ),
-                        ],
-                        if (playing) ...[
-                          const SizedBox(width: 8),
-                          Text(
-                            "正在观看",
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
                       ],
-                    ),
-                  ],
-                ),
+                      if (playing) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          "正在观看",
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
               ),
-              SizedBox(width: compact ? 6 : 10),
-              _buildActionArea(
-                context,
-                compact: compact,
-                vertical: false,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(width: compact ? 6 : 10),
+            _buildActionArea(
+              context,
+              compact: compact,
+              vertical: false,
+            ),
+          ],
         ),
       ),
     );
@@ -760,7 +750,7 @@ class FollowUserItem extends StatelessWidget {
     if (duration.isEmpty) {
       return "";
     }
-    return "开播 $duration";
+    return "开播了$duration";
   }
 
   String formatLiveDuration(String? startTimeStampString) {
