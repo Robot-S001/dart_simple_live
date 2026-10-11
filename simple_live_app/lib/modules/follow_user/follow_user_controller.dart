@@ -99,9 +99,7 @@ class FollowUserController extends BasePageController<FollowUser> {
 
   void _restoreGroupSelection() {
     final settings = AppSettingsController.instance;
-    groupMode.value = settings.followGroupMode.value == "platform"
-        ? FollowGroupMode.platform
-        : FollowGroupMode.liveStatus;
+    groupMode.value = FollowGroupMode.liveStatus;
     selectedGroupId.value = settings.followSelectedGroupId.value;
   }
 
