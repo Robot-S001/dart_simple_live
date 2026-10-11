@@ -321,7 +321,7 @@ class FollowUserPage extends GetView<FollowUserController> {
                           }
                         },
                         child: PageGridView(
-                          padding: const EdgeInsets.fromLTRB(8, 0, 8, 96),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 96),
                           crossAxisSpacing: layout.crossAxisSpacing,
                           mainAxisSpacing: layout.mainAxisSpacing,
                           mainAxisExtent: layout.mainAxisExtent,
@@ -433,6 +433,8 @@ class FollowUserPage extends GetView<FollowUserController> {
       childAspectRatio: 3.2,
       crossAxisSpacing: 12,
       mainAxisSpacing: showLiveCover ? 10 : 8,
+      // 与 1.8.6 一致：瀑布流布局，卡片高度自适应（不固定高度）
+      useFixedGrid: false,
     );
   }
 
